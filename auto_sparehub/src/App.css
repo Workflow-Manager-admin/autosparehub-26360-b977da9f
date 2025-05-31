@@ -134,15 +134,17 @@ body {
 }
 .cart-count-badge {
   position: absolute;
-  top: 2px; right: 0;
+  top: 2px; right: 0px;
   background: var(--accent-color);
-  color: #fff;
+  color: #fff !important;
   border-radius: 999px;
-  padding: 1px 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  padding: 2px 7px;
+  font-size: 0.89rem;
+  font-weight: 700;
   min-width: 20px;
   text-align: center;
+  border: 1.5px solid var(--card-background);
+  box-shadow: 0 1px 5px #ff990099;
 }
 
 /* MAIN LAYOUT */
@@ -230,9 +232,11 @@ body {
   margin: 0;
 }
 .catalog-subtitle {
-  color: var(--secondary-color);
-  font-size: 1.09rem;
+  color: var(--text-secondary);
+  font-size: 1.04rem;
   margin-left: 2px;
+  font-weight: 400;
+  opacity: 0.87;
 }
 
 /* PRODUCT GRID */

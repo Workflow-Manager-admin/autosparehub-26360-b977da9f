@@ -1,24 +1,87 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import './App.css';
 import Catalog from './components/Catalog';
+import SearchBar from './components/SearchBar';
+import FilterSidebar from './components/FilterSidebar';
 
-/**
- * PUBLIC_INTERFACE
- * Main application shell for AutoSpareHub:
- * - Top navbar: logo, search, user account, cart
- * - Left sidebar: filters
- * - Main content: grid catalog, or respective view (cart, account, checkout)
- * Navigation is handled via client state (no router for this version).
- */
+// Example data for demo: In real app this would come from backend/API/static data.
+const MOCK_PRODUCTS = [
+  {
+    id: 1, name: "Brake Pad Set", price: 119, brand: "Brembo", category: "Brakes", compatibility: "Sedan",
+  },
+  {
+    id: 2, name: "Oil Filter", price: 29, brand: "Bosch", category: "Engine", compatibility: "SUV",
+  },
+  {
+    id: 3, name: "Headlight Bulb", price: 45, brand: "Philips", category: "Lights", compatibility: "Sedan",
+  },
+  {
+    id: 4, name: "Air Filter", price: 31, brand: "Bosch", category: "Engine", compatibility: "Hatchback",
+  },
+  {
+    id: 5, name: "Clutch Disc", price: 239, brand: "Valeo", category: "Transmission", compatibility: "SUV",
+  },
+  {
+    id: 6, name: "Battery", price: 129, brand: "Amaron", category: "Electrical", compatibility: "Hatchback",
+  },
+  {
+    id: 7, name: "Spark Plug", price: 17, brand: "NGK", category: "Engine", compatibility: "Sedan",
+  },
+  {
+    id: 8, name: "Front Bumper", price: 310, brand: "OEM", category: "Body", compatibility: "SUV"
+  },
+];
+
+const CATEGORY_OPTIONS = ["Brakes", "Engine", "Lights", "Transmission", "Electrical", "Body"];
+const BRAND_OPTIONS = ["Brembo", "Bosch", "Philips", "Valeo", "Amaron", "NGK", "OEM"];
+const COMPATIBILITY_OPTIONS = ["Sedan", "SUV", "Hatchback"];
+
+const PRICE_RANGE = { min: 0, max: 350 };
+
 function App() {
   // App navigation: "catalog" | "cart" | "account" | "checkout"
   const [view, setView] = useState("catalog");
 
-  // Simple handlers to simulate navigation (subsequent implementation will update these)
+  // Product state
+  const [searchText, setSearchText] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedBrand, setSelectedBrand] = useState('');
+  const [selectedCompatibility, setSelectedCompatibility] = useState('');
+  const [selectedPrice, setSelectedPrice] = useState(PRICE_RANGE.max);
+
+  // Simple handlers to simulate navigation
   const goToCatalog = () => setView("catalog");
   const goToCart = () => setView("cart");
   const goToAccount = () => setView("account");
   const goToCheckout = () => setView("checkout");
+
+  // Handlers for filters and search
+  const handleSearchChange = (e) => setSearchText(e.target.value);
+  const handleSearchSubmit = (e) => { e.preventDefault(); }; // No-op, live updates
+
+  const handleCategoryChange = (e) => setSelectedCategory(e.target.value);
+  const handleBrandChange = (e) => setSelectedBrand(e.target.value);
+  const handleCompatibilityChange = (e) => setSelectedCompatibility(e.target.value);
+  const handlePriceChange = (e) => setSelectedPrice(Number(e.target.value));
+
+  // Filtering logic memoized for efficiency
+  const filteredProducts = useMemo(() => {
+    return MOCK_PRODUCTS.filter(product => {
+      if (
+        (searchText && !(
+          product.name.toLowerCase().includes(searchText.toLowerCase()) ||
+          product.brand.toLowerCase().includes(searchText.toLowerCase())
+        )) ||
+        (selectedCategory && product.category !== selectedCategory) ||
+        (selectedBrand && product.brand !== selectedBrand) ||
+        (selectedCompatibility && product.compatibility !== selectedCompatibility) ||
+        product.price > selectedPrice
+      ) {
+        return false;
+      }
+      return true;
+    });
+  }, [searchText, selectedCategory, selectedBrand, selectedCompatibility, selectedPrice]);
 
   return (
     <div className="app">
@@ -29,15 +92,11 @@ function App() {
             <span className="logo-icon" aria-label="AutoSpareHub Logo">🚗</span>
             <span className="logo-text">AutoSpareHub</span>
           </div>
-          <form className="navbar-search" onSubmit={e => { e.preventDefault(); /* implement search*/ }}>
-            <input
-              className="search-input"
-              type="text"
-              placeholder="Search spare parts..."
-              aria-label="Search spare parts"
-            />
-            <button className="search-btn" type="submit">🔍</button>
-          </form>
+          <SearchBar
+            value={searchText}
+            onChange={handleSearchChange}
+            onSubmit={handleSearchSubmit}
+          />
         </div>
         <div className="navbar-section navbar-right">
           <button
@@ -62,34 +121,32 @@ function App() {
       </nav>
 
       <div className="main-layout">
-        {/* Sidebar for filters, shown on catalog only for now */}
-        <aside className={`sidebar${view === "catalog" ? "" : " sidebar-hidden"}`}>
-          <div className="sidebar-title">Filters</div>
-          <div className="sidebar-content">
-            {/* Placeholder - actual filter components come later */}
-            <div className="filter-group">
-              <div className="filter-label">Category</div>
-              <select className="filter-select">
-                <option>All Categories</option>
-              </select>
-            </div>
-            <div className="filter-group">
-              <div className="filter-label">Brand</div>
-              <select className="filter-select">
-                <option>All Brands</option>
-              </select>
-            </div>
-            <div className="filter-group">
-              <div className="filter-label">Price</div>
-              <input className="filter-input" type="range" min="0" max="1000" step="10" />
-            </div>
-          </div>
-        </aside>
+        {/* Sidebar for filters, only on catalog view */}
+        {view === "catalog" && (
+          <FilterSidebar
+            categories={CATEGORY_OPTIONS}
+            brands={BRAND_OPTIONS}
+            compatibilities={COMPATIBILITY_OPTIONS}
+            selectedCategory={selectedCategory}
+            selectedBrand={selectedBrand}
+            selectedCompatibility={selectedCompatibility}
+            priceRange={PRICE_RANGE}
+            selectedPrice={selectedPrice}
+            onCategoryChange={handleCategoryChange}
+            onBrandChange={handleBrandChange}
+            onCompatibilityChange={handleCompatibilityChange}
+            onPriceChange={handlePriceChange}
+          />
+        )}
+        {/* Hide sidebar in other views for mobile friendliness */}
+        {view !== "catalog" && (
+          <aside className="sidebar sidebar-hidden" />
+        )}
 
         <main className="main-content">
           {/* Conditional rendering for "routes" */}
           {view === "catalog" && (
-            <Catalog onAddToCart={goToCart} />
+            <Catalog products={filteredProducts} onAddToCart={goToCart} />
           )}
           {view === "cart" && (
             <section className="cart-section">

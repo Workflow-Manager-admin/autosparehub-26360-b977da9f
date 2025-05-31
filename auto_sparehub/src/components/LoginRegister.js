@@ -19,13 +19,15 @@ function LoginRegister({ open, onClose, onAuth }) {
   });
   const [error, setError] = useState("");
 
-  if (!open) return null;
-
   // Reset on open/close or mode switch
   React.useEffect(() => {
-    setFields({ name: "", email: "", password: "", confirm: "" });
-    setError("");
+    if (open) {
+      setFields({ name: "", email: "", password: "", confirm: "" });
+      setError("");
+    }
   }, [open, isRegister]);
+
+  if (!open) return null;
 
   function handleSwitchMode(e) {
     e.preventDefault();

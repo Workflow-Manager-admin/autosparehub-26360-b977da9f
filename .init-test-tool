@@ -1,0 +1,4 @@
+{
+    "command": "npm run test",
+    "working_directory": "/home/kavia/workspace/code-generation/autosparehub-26360-b977da9f/auto_sparehub"
+}

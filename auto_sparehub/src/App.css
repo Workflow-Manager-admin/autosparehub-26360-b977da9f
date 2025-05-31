@@ -45,18 +45,21 @@ body {
 /* NAVBAR */
 .navbar {
   height: var(--navbar-height);
-  background: var(--primary-color);
+  background: var(--navbar-background);
   color: #fff;
   display: flex;
   box-shadow: var(--shadow);
   align-items: center;
   position: fixed;
   top: 0;
+  left: 0;
   width: 100vw;
   z-index: 100;
   justify-content: space-between;
-  padding: 0 30px;
+  padding: 0 3vw;
   border-bottom: 1px solid #353535;
+  font-size: 1rem;
+  min-width: 0;
 }
 
 .navbar-section {

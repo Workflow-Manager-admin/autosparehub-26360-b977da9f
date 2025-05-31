@@ -89,28 +89,7 @@ function App() {
         <main className="main-content">
           {/* Conditional rendering for "routes" */}
           {view === "catalog" && (
-            // Catalog grid placeholder
-            <section className="catalog-section">
-              <div className="catalog-title">
-                <h1>Find Spare Parts</h1>
-                <span className="catalog-subtitle">
-                  The best selection of car spare parts at your fingertips.
-                </span>
-              </div>
-              <div className="product-grid">
-                {/* Placeholder product cards */}
-                {[...Array(8)].map((_, idx) => (
-                  <div className="product-card" key={idx}>
-                    <div className="product-img-placeholder">Image</div>
-                    <div className="product-details">
-                      <div className="product-title">Product Name</div>
-                      <div className="product-price">$99.00</div>
-                      <button className="btn btn-small" onClick={goToCart}>Add to Cart</button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
+            <Catalog onAddToCart={goToCart} />
           )}
           {view === "cart" && (
             <section className="cart-section">

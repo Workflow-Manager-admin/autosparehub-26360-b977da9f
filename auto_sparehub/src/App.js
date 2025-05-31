@@ -4,6 +4,7 @@ import Catalog from './components/Catalog';
 import SearchBar from './components/SearchBar';
 import FilterSidebar from './components/FilterSidebar';
 import Cart from './components/Cart';
+import Checkout from './components/Checkout';
 
 // Example data for demo: In real app this would come from backend/API/static data.
 const MOCK_PRODUCTS = [
@@ -232,11 +233,14 @@ function App() {
           )}
           {view === "cart" && renderCartPage()}
           {view === "checkout" && (
-            <section className="checkout-section">
-              <h2>Checkout (preview)</h2>
-              <p>Checkout flow placeholder.</p>
-              <button className="btn btn-secondary" onClick={goToCatalog}>Cancel</button>
-            </section>
+            <Checkout
+              cart={cart}
+              onBackToCatalog={() => {
+                setView("catalog");
+                setCart([]);
+              }}
+              onCheckoutComplete={() => setCart([])}
+            />
           )}
           {view === "account" && (
             <section className="account-section">

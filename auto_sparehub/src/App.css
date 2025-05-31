@@ -532,6 +532,108 @@ input[type="text"]:focus, input[type="number"]:focus, input:not([type]):focus {
 .cart-remove-btn {
   margin-left: 6px;
 }
+
+/* MODALS (Login/Register) */
+.modal-overlay {
+  position: fixed;
+  z-index: 1500;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(30, 30, 30, 0.44);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-box {
+  background: #fff;
+  border-radius: var(--border-radius);
+  max-width: 380px;
+  width: 95vw;
+  min-width: 0;
+  box-shadow: 0 10px 40px #4443;
+  padding: 34px 32px 26px 32px;
+  position: relative;
+  animation: modalIn 0.18s cubic-bezier(.38,.4,.45,1.15);
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.97);}
+  to { opacity: 1; transform: scale(1);}
+}
+.modal-close-btn {
+  position: absolute;
+  top: 11px; right: 17px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #888;
+  cursor: pointer;
+}
+.modal-close-btn:hover,
+.modal-close-btn:focus {
+  color: var(--accent-color);
+}
+.modal-box h3 {
+  margin: 0 0 13px 0;
+  color: var(--primary-color);
+  font-size: 1.27rem;
+  font-weight: 700;
+}
+.modal-form .form-group > label {
+  font-weight: 500;
+}
+.modal-form input {
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  padding: 8px 8px;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  width: 100%;
+}
+.modal-form .btn {
+  margin-top: 3px;
+}
+.form-error {
+  background: #ffede0;
+  border-radius: 3px;
+  padding: 6px 8px 5px 8px;
+}
+
+/* ACCOUNT DASHBOARD */
+.account-section {
+  background: #fff;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 22px 26px 18px 22px;
+  margin-top: 12px;
+  width: 100%;
+  max-width: 660px;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 330px;
+}
+.account-section h2 {
+  margin-top: 0;
+  color: var(--primary-color);
+}
+.account-profile > h3,
+.account-orders > h3 {
+  color: var(--secondary-color);
+  font-size: 1.14rem;
+  margin-bottom: 8px;
+}
+.orders-table {
+  margin-top: 2px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.orders-table th, .orders-table td {
+  border-bottom: 1px solid #efefef;
+  padding: 6px 6px;
+}
+.order-row td {
+  vertical-align: top;
+}
+
 /* Responsive - cart drawer */
 @media (max-width: 700px) {
   .cart-drawer {

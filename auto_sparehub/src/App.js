@@ -3,6 +3,7 @@ import './App.css';
 import Catalog from './components/Catalog';
 import SearchBar from './components/SearchBar';
 import FilterSidebar from './components/FilterSidebar';
+import Cart from './components/Cart';
 
 // Example data for demo: In real app this would come from backend/API/static data.
 const MOCK_PRODUCTS = [

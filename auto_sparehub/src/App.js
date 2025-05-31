@@ -47,7 +47,7 @@ function App() {
   // App navigation: "catalog" | "cart" | "account" | "checkout"
   const [view, setView] = useState("catalog");
 
-  // Product state
+  // Product/filter state
   const [searchText, setSearchText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedBrand, setSelectedBrand] = useState('');
@@ -58,13 +58,21 @@ function App() {
   const [cart, setCart] = useState([]); // [{product, quantity}]
   const [cartOpen, setCartOpen] = useState(false);
 
-  // Navigation handlers
+  // USER/MODAL state
+  const [user, setUser] = useState(null); // {name, email, orders}
+  const [loginRegisterOpen, setLoginRegisterOpen] = useState(false);
+
+  // --- Navigation handlers ---
   const goToCatalog = () => setView("catalog");
   const goToCartPage = () => setView("cart");
-  const goToAccount = () => setView("account");
   const goToCheckout = () => setView("checkout");
+  // When account icon pressed
+  const goToAccount = () => {
+    if (user) setView("account");
+    else setLoginRegisterOpen(true);
+  };
 
-  // Search/filter handlers
+  // --- Search/filter handlers ---
   const handleSearchChange = (e) => setSearchText(e.target.value);
   const handleSearchSubmit = (e) => { e.preventDefault(); };
   const handleCategoryChange = (e) => setSelectedCategory(e.target.value);
@@ -91,7 +99,7 @@ function App() {
     });
   }, [searchText, selectedCategory, selectedBrand, selectedCompatibility, selectedPrice]);
 
-  // CART Logic
+  // ---- CART Logic ----
   // PUBLIC_INTERFACE
   function addToCart(product) {
     setCart(prevCart => {
@@ -132,10 +140,34 @@ function App() {
     setCartOpen(false);
   }
 
+  // ---- AUTH / ACCOUNT logic ----
+  // Called on login/register success
+  function handleLoginSuccess(userData) {
+    // Optionally, migrate cart/orders logic, for now assume:
+    setUser({ ...userData, orders: userData.orders ?? [] });
+    setLoginRegisterOpen(false);
+    setView("account");
+  }
+
+  // Called for logout
+  function handleLogout() {
+    setUser(null);
+    setView("catalog");
+  }
+
+  // Update user profile (from dashboard)
+  function handleProfileUpdate(newProfile) {
+    setUser((cur) => ({
+      ...cur,
+      name: newProfile.name,
+      email: newProfile.email,
+    }));
+  }
+
   // Computed badge count
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
-  // For mobile page route "cart": fallback for inaccessible modal, also for SEO/a11y
+  // Cart "page" fallback, for mobile/SEO
   function renderCartPage() {
     return (
       <section className="cart-section">
@@ -165,6 +197,7 @@ function App() {
     );
   }
 
+  // ---- MAIN RENDER
   return (
     <div className="app">
       <nav className="navbar">
@@ -181,9 +214,10 @@ function App() {
           />
         </div>
         <div className="navbar-section navbar-right">
+          {/* Account/User icon - changes to "My Account"/Logout if logged in */}
           <button
             className="icon-btn"
-            title="Account"
+            title={user ? `My Account (${user.name})` : "Account"}
             aria-label="Account"
             onClick={goToAccount}
           >
@@ -221,13 +255,13 @@ function App() {
             onPriceChange={handlePriceChange}
           />
         )}
-        {/* Hide sidebar in other views for mobile friendliness */}
+        {/* Hide sidebar for non-catalog */}
         {view !== "catalog" && (
           <aside className="sidebar sidebar-hidden" />
         )}
 
         <main className="main-content">
-          {/* Conditional rendering for "routes" */}
+          {/* Conditional routing */}
           {view === "catalog" && (
             <Catalog
               products={filteredProducts}
@@ -240,20 +274,31 @@ function App() {
               cart={cart}
               onBackToCatalog={() => {
                 setView("catalog");
-                setCart([]);
+                setCart([]); // (simulate: clear cart)
               }}
               onCheckoutComplete={() => setCart([])}
             />
           )}
-          {view === "account" && (
-            <section className="account-section">
-              <h2>My Account (preview)</h2>
-              <p>Account and order management (simulated).</p>
-              <button className="btn btn-secondary" onClick={goToCatalog}>Back to Catalog</button>
-            </section>
+          {/* Main account dashboard for logged-in users */}
+          {view === "account" && user && (
+            <UserAccount
+              user={user}
+              onLogout={handleLogout}
+              onBack={goToCatalog}
+              onProfileUpdate={handleProfileUpdate}
+            />
           )}
+          {/* After "Account" click, show login/register modal if not logged in */}
         </main>
       </div>
+      {/* Modal for login/register */}
+      {loginRegisterOpen && (
+        <LoginRegister
+          open={loginRegisterOpen}
+          onClose={() => setLoginRegisterOpen(false)}
+          onAuth={handleLoginSuccess}
+        />
+      )}
       {/* Cart drawer/modal, always accessible */}
       {cartOpen && (
         <Cart

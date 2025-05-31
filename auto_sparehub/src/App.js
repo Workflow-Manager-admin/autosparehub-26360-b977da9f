@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
+import Catalog from './components/Catalog';
 
 /**
  * PUBLIC_INTERFACE

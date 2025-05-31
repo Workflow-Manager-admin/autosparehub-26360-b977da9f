@@ -32,9 +32,10 @@ function Catalog({ products, onAddToCart }) {
           items.map(product => (
             <ProductCard
               key={product.id}
+              product={product}
               name={product.name}
               price={typeof product.price === 'number' ? `$${product.price}` : product.price}
-              onAddToCart={onAddToCart}
+              onAddToCart={() => onAddToCart(product)}
             />
           ))
         ) : (

@@ -261,27 +261,48 @@ body {
   color: #fff;
   border: none;
   border-radius: var(--border-radius);
-  padding: 9px 20px;
+  padding: 10px 22px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.18s;
+  transition: background 0.18s, color 0.13s;
   margin: 2px 6px 0 0;
-  box-shadow: 0 2px 5px rgba(255,153,0,0.04);
+  box-shadow: 0 2px 7px rgba(255,153,0,0.08);
+  min-width: 90px;
+  outline: none;
+  border: 1px solid var(--accent-color);
 }
 .btn:hover,
 .btn:focus {
-  background: #ffb733;
+  background: #fff;
+  color: var(--accent-color);
+  border: 1px solid var(--accent-color);
 }
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background: var(--accent-color);
+  color: #fff;
+}
+
 .btn-secondary {
   background: #fff !important;
   color: var(--primary-color) !important;
   border: 1px solid var(--primary-color);
-  margin-left: 9px;
+  margin-left: 0.5rem;
+  box-shadow: none;
 }
+.btn-secondary:hover, .btn-secondary:focus {
+  background: var(--primary-color) !important;
+  color: #fff !important;
+}
+
 .btn-small {
-  padding: 4px 13px;
-  font-size: 0.97rem;
+  padding: 5px 11px;
+  font-size: 0.93rem;
+  min-width: 62px;
 }
 
 /* CART, CHECKOUT, ACCOUNT SECTIONS */

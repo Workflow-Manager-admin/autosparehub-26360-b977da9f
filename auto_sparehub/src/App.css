@@ -276,12 +276,122 @@ body {
   padding: 24px;
   margin-top: 12px;
   width: 100%;
+  max-width: 660px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .cart-section h2,
 .checkout-section h2,
 .account-section h2 {
   margin-top: 0;
   color: var(--primary-color);
+}
+
+/* Checkout Stepper */
+.checkout-stepper {
+  display: flex;
+  gap: 36px;
+  margin: 17px 0 24px 0;
+  font-size: 1.06rem;
+  font-weight: 500;
+  color: var(--secondary-color);
+  justify-content: center;
+  align-items: center;
+}
+.checkout-step {
+  padding: 6px 18px;
+  border-radius: 20px;
+  background: #f7f7f7;
+  border: 1px solid #e8e8e8;
+}
+.checkout-step-active {
+  background: var(--accent-color);
+  color: #fff !important;
+  border: 1px solid var(--accent-color);
+  box-shadow: 0 1px 6px #ffe2bc74;
+}
+.checkout-step-done {
+  background: #ededed;
+  color: #aaa !important;
+}
+.checkout-main {
+  margin-top: 8px;
+}
+.checkout-content {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+}
+.checkout-summary-box {
+  flex: 1;
+  margin-left: 22px;
+  min-width: 190px;
+  padding: 19px 18px 13px 18px;
+  background: #fcfcfc;
+  border: 1px solid #ececec;
+  border-radius: 7px;
+  font-size: 1rem;
+  align-self: flex-start;
+  box-shadow: 0 2px 7px rgba(0,0,0,0.025);
+}
+.checkout-cart-summary h4 {
+  margin: 0 0 8px 0;
+  font-size: 1.08rem;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  background: none;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.form-row {
+  display: flex;
+  flex-direction: row;
+  gap: 22px;
+}
+.form-row .form-group {
+  flex: 1;
+}
+.checkout-confirm {
+  padding-top: 14px;
+  font-size: 1.1rem;
+}
+.checkout-actions {
+  margin-top: 19px;
+  display: flex;
+  gap: 12px;
+}
+input[type="text"], input[type="number"], input:not([type]) {
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  padding: 8px 8px;
+  font-size: 1rem;
+  color: var(--text-color);
+  background: #f9f9f9;
+  transition: border 0.16s;
+  margin-bottom: 2px;
+}
+input[type="text"]:focus, input[type="number"]:focus, input:not([type]):focus {
+  border-color: var(--accent-color);
+  outline: none;
+}
+
+@media (max-width: 700px) {
+  .checkout-content {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .checkout-summary-box {
+    margin-left: 0;
+    margin-top: 16px;
+  }
 }
 
 /* CART DRAWER & MODAL STYLES */

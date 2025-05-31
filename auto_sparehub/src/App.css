@@ -155,17 +155,18 @@ body {
 
 /* SIDEBAR */
 .sidebar {
-  background: var(--secondary-color);
+  background: var(--sidebar-background);
   color: #fff;
   width: var(--sidebar-width);
-  min-width: 180px;
+  min-width: 170px;
   max-width: 300px;
-  padding: 26px 18px 10px 22px;
+  padding: 22px 14px 10px 18px;
   box-sizing: border-box;
-  border-right: 1px solid #dbdbdb;
+  border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 2rem;
+  transition: width 0.18s;
 }
 .sidebar-title {
   font-size: 1.25rem;

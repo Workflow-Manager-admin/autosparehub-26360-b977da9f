@@ -5,6 +5,9 @@ import SearchBar from './components/SearchBar';
 import FilterSidebar from './components/FilterSidebar';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
+// NEW
+import LoginRegister from './components/LoginRegister';
+import UserAccount from './components/UserAccount';
 
 // Example data for demo: In real app this would come from backend/API/static data.
 const MOCK_PRODUCTS = [

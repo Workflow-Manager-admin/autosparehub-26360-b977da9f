@@ -50,16 +50,19 @@ function App() {
   const [selectedCompatibility, setSelectedCompatibility] = useState('');
   const [selectedPrice, setSelectedPrice] = useState(PRICE_RANGE.max);
 
-  // Simple handlers to simulate navigation
+  // CART state and handlers
+  const [cart, setCart] = useState([]); // [{product, quantity}]
+  const [cartOpen, setCartOpen] = useState(false);
+
+  // Navigation handlers
   const goToCatalog = () => setView("catalog");
-  const goToCart = () => setView("cart");
+  const goToCartPage = () => setView("cart");
   const goToAccount = () => setView("account");
   const goToCheckout = () => setView("checkout");
 
-  // Handlers for filters and search
+  // Search/filter handlers
   const handleSearchChange = (e) => setSearchText(e.target.value);
-  const handleSearchSubmit = (e) => { e.preventDefault(); }; // No-op, live updates
-
+  const handleSearchSubmit = (e) => { e.preventDefault(); };
   const handleCategoryChange = (e) => setSelectedCategory(e.target.value);
   const handleBrandChange = (e) => setSelectedBrand(e.target.value);
   const handleCompatibilityChange = (e) => setSelectedCompatibility(e.target.value);
@@ -83,6 +86,80 @@ function App() {
       return true;
     });
   }, [searchText, selectedCategory, selectedBrand, selectedCompatibility, selectedPrice]);
+
+  // CART Logic
+  // PUBLIC_INTERFACE
+  function addToCart(product) {
+    setCart(prevCart => {
+      const idx = prevCart.findIndex(item => item.product.id === product.id);
+      if (idx !== -1) {
+        // Already in cart: increase quantity
+        const newCart = [...prevCart];
+        newCart[idx] = { ...newCart[idx], quantity: newCart[idx].quantity + 1 };
+        return newCart;
+      }
+      return [...prevCart, { product, quantity: 1 }];
+    });
+    setCartOpen(true); // open cart drawer
+  }
+
+  // PUBLIC_INTERFACE
+  function removeFromCart(productId) {
+    setCart(prevCart => prevCart.filter(item => item.product.id !== productId));
+  }
+
+  // PUBLIC_INTERFACE
+  function updateCartItemQuantity(productId, newQuantity) {
+    setCart(prevCart => prevCart.map(item =>
+      item.product.id === productId
+        ? { ...item, quantity: Math.max(1, newQuantity) }
+        : item
+    ));
+  }
+
+  // PUBLIC_INTERFACE
+  function handleProceedToCheckout() {
+    setCartOpen(false);
+    setView("checkout");
+  }
+
+  // PUBLIC_INTERFACE
+  function handleCloseCart() {
+    setCartOpen(false);
+  }
+
+  // Computed badge count
+  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+  // For mobile page route "cart": fallback for inaccessible modal, also for SEO/a11y
+  function renderCartPage() {
+    return (
+      <section className="cart-section">
+        <h2>Your Cart</h2>
+        {cart.length === 0 ? (
+          <p>Your cart is empty.</p>
+        ) : (
+          <div>
+            {cart.map(({ product, quantity }) => (
+              <div key={product.id} style={{ borderBottom: "1px solid #ececec", marginBottom: 13, paddingBottom: 9 }}>
+                <b>{product.name}</b> ({quantity}) - ${(product.price * quantity).toFixed(2)}
+                <button
+                  className="btn btn-small btn-secondary"
+                  onClick={() => removeFromCart(product.id)}
+                  style={{ marginLeft: 10 }}
+                >Remove</button>
+              </div>
+            ))}
+            <div style={{ marginTop: 14, fontSize: 17 }}>
+              <b>Total: </b>${cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0).toFixed(2)}
+            </div>
+            <button className="btn" onClick={handleProceedToCheckout}>Proceed to Checkout</button>
+          </div>
+        )}
+        <button className="btn btn-secondary" onClick={goToCatalog}>Back to Catalog</button>
+      </section>
+    );
+  }
 
   return (
     <div className="app">
@@ -112,11 +189,12 @@ function App() {
             className="icon-btn"
             title="Cart"
             aria-label="Cart"
-            onClick={goToCart}
+            onClick={() => setCartOpen(true)}
           >
             <span className="icon-cart" role="img" aria-label="Cart">&#128722;</span>
-            {/* Cart count badge, placeholder (to be implemented with state) */}
-            {/* <span className="cart-count-badge">2</span> */}
+            {cartCount > 0 && (
+              <span className="cart-count-badge">{cartCount}</span>
+            )}
           </button>
         </div>
       </nav>
@@ -147,16 +225,12 @@ function App() {
         <main className="main-content">
           {/* Conditional rendering for "routes" */}
           {view === "catalog" && (
-            <Catalog products={filteredProducts} onAddToCart={goToCart} />
+            <Catalog
+              products={filteredProducts}
+              onAddToCart={addToCart}
+            />
           )}
-          {view === "cart" && (
-            <section className="cart-section">
-              <h2>Cart (preview)</h2>
-              <p>Your cart is empty.</p>
-              <button className="btn" onClick={goToCheckout}>Proceed to Checkout</button>
-              <button className="btn btn-secondary" onClick={goToCatalog}>Back to Catalog</button>
-            </section>
-          )}
+          {view === "cart" && renderCartPage()}
           {view === "checkout" && (
             <section className="checkout-section">
               <h2>Checkout (preview)</h2>
@@ -173,6 +247,16 @@ function App() {
           )}
         </main>
       </div>
+      {/* Cart drawer/modal, always accessible */}
+      {cartOpen && (
+        <Cart
+          items={cart}
+          onQuantityChange={updateCartItemQuantity}
+          onRemove={removeFromCart}
+          onCheckout={handleProceedToCheckout}
+          onClose={handleCloseCart}
+        />
+      )}
     </div>
   );
 }

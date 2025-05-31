@@ -2,24 +2,38 @@
   --primary-color: #444444;
   --secondary-color: #888888;
   --accent-color: #FF9900;
-  --bg-color: #f6f6f6;
-  --text-color: #222;
-  --text-secondary: #666;
+  --bg-color: #f9f9f9;
+  --text-color: #222222;
+  --text-secondary: #888888;
   --navbar-height: 60px;
   --sidebar-width: 260px;
-  --border-radius: 7px;
-  --border-color: #e0e0e0;
-  --shadow: 0 1px 8px 0 rgba(0,0,0,0.03);
+  --border-radius: 8px;
+  --border-color: #dedede;
+  --shadow: 0 1px 8px 0 rgba(0,0,0,0.05);
   --icon-size: 22px;
+  --navbar-background: var(--primary-color);
+  --sidebar-background: var(--secondary-color);
+  --card-background: #fff;
+  --input-background: #fff;
+}
+
+html {
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 100%;
 }
 
 body {
   margin: 0;
-  font-family: 'Inter', 'Roboto', 'Arial', sans-serif;
-  background-color: var(--bg-color);
+  padding: 0;
+  font-family: 'Inter', 'Roboto', 'Arial', 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg-color);
   color: var(--text-color);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0px;
 }
 
 .app {
